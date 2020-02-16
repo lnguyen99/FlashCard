@@ -9,5 +9,6 @@ Coursework for CodePath, Mobile App Design Course
 - [x] Style the card with drawable 
 
 ###### App Walk-through 
-<img src="https://imgur.com/zFcFjDW" width=200><br>
+<img src="https://i.imgur.com/zFcFjDW.gif" width=200><br>
+
 
