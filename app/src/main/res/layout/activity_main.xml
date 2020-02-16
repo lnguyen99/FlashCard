@@ -17,7 +17,7 @@
         android:background="@drawable/card_background"
         android:elevation="10dp"
         android:gravity="center"
-        android:text="Who is the 44th President of the United States?"
+        android:text="@string/question"
         android:textColor="@android:color/white"
         android:textSize="40sp" />
 
@@ -30,7 +30,7 @@
         android:layout_marginBottom="52dp"
         android:background="@color/orange"
         android:gravity="center"
-        android:text="Barack Obama"
+        android:text="@string/correct_answer"
         android:textColor="@android:color/black"
         android:textSize="40sp" />
 
@@ -43,7 +43,7 @@
         android:layout_marginBottom="190dp"
         android:background="@color/orange"
         android:gravity="center"
-        android:text="Bill Clinton"
+        android:text="@string/wrong_answer1"
         android:textColor="@android:color/black"
         android:textSize="40sp" />
 
@@ -56,14 +56,14 @@
         android:layout_marginBottom="122dp"
         android:background="@color/orange"
         android:gravity="center"
-        android:text="Donald Trump"
+        android:text="@string/wrong_answer2"
         android:textColor="@android:color/black"
         android:textSize="40sp" />
 
     <ImageView
         android:id="@+id/toogle_choices_visibility"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
         android:src="@drawable/show_icon" />

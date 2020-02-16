@@ -7,6 +7,8 @@ import android.widget.ImageView;
 
 public class MainActivity extends AppCompatActivity {
 
+    ImageView flash_card_image_view;
+    boolean isShowingAnswer = true;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -48,13 +50,12 @@ public class MainActivity extends AppCompatActivity {
 
 
         findViewById(R.id.toogle_choices_visibility).setOnClickListener(new View.OnClickListener() {
-
-            boolean isShowingAnswer = true;
-
             @Override
             public void onClick(View v) {
+                flash_card_image_view = findViewById(R.id.toogle_choices_visibility);
                 if (isShowingAnswer) {
-                    ((ImageView) findViewById(R.id.toogle_choices_visibility)).setImageResource(R.drawable.hide_icon);
+
+                    flash_card_image_view.setImageResource(R.drawable.hide_icon);
                     findViewById(R.id.correct_answer).setVisibility(View.INVISIBLE);
                     findViewById(R.id.wrong_answer1).setVisibility(View.INVISIBLE);
                     findViewById(R.id.wrong_answer2).setVisibility(View.INVISIBLE);
@@ -62,7 +63,7 @@ public class MainActivity extends AppCompatActivity {
                     isShowingAnswer = false;
 
                 } else {
-                    ((ImageView) findViewById(R.id.toogle_choices_visibility)).setImageResource(R.drawable.show_icon);
+                    flash_card_image_view.setImageResource(R.drawable.show_icon);
                     findViewById(R.id.correct_answer).setVisibility(View.VISIBLE);
                     findViewById(R.id.wrong_answer1).setVisibility(View.VISIBLE);
                     findViewById(R.id.wrong_answer2).setVisibility(View.VISIBLE);
