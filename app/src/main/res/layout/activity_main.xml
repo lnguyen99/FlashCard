@@ -13,7 +13,7 @@
         android:layout_height="200dp"
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
-        android:layout_marginTop="123dp"
+        android:layout_marginTop="33dp"
         android:background="@drawable/card_background"
         android:elevation="10dp"
         android:gravity="center"
@@ -22,18 +22,50 @@
         android:textSize="40sp" />
 
     <TextView
-        android:id="@+id/flashcard_answer"
+        android:id="@+id/correct_answer"
         android:layout_width="match_parent"
-        android:layout_height="200dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
         android:layout_alignParentStart="true"
-        android:layout_alignTop="@+id/flashcard_question"
-        android:background="@android:color/holo_orange_dark"
+        android:layout_marginBottom="52dp"
+        android:background="@color/orange"
         android:gravity="center"
         android:text="Barack Obama"
         android:textColor="@android:color/black"
-        android:textSize="40sp"
-        android:visibility="invisible"/>
+        android:textSize="40sp" />
 
+    <TextView
+        android:id="@+id/wrong_answer1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginBottom="190dp"
+        android:background="@color/orange"
+        android:gravity="center"
+        android:text="Bill Clinton"
+        android:textColor="@android:color/black"
+        android:textSize="40sp" />
 
+    <TextView
+        android:id="@+id/wrong_answer2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginBottom="122dp"
+        android:background="@color/orange"
+        android:gravity="center"
+        android:text="Donald Trump"
+        android:textColor="@android:color/black"
+        android:textSize="40sp" />
+
+    <ImageView
+        android:id="@+id/toogle_choices_visibility"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:src="@drawable/show_icon" />
 
 </RelativeLayout>
