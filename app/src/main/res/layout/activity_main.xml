@@ -5,29 +5,35 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".MainActivity"
-    android:id="@+id/mainView" >
+    android:id="@+id/main_view" >
 
     <TextView
-        android:id="@+id/flashcardQuestion"
+        android:id="@+id/flashcard_question"
         android:layout_width="match_parent"
         android:layout_height="200dp"
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
-        android:layout_marginTop="133dp"
+        android:layout_marginTop="123dp"
+        android:background="@drawable/card_background"
+        android:elevation="10dp"
         android:gravity="center"
         android:text="Who is the 44th President of the United States?"
+        android:textColor="@android:color/white"
         android:textSize="40sp" />
 
     <TextView
-        android:id="@+id/flashcardAnswer"
+        android:id="@+id/flashcard_answer"
         android:layout_width="match_parent"
         android:layout_height="200dp"
         android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"
-        android:layout_marginTop="133dp"
+        android:layout_alignTop="@+id/flashcard_question"
+        android:background="@android:color/holo_orange_dark"
         android:gravity="center"
         android:text="Barack Obama"
+        android:textColor="@android:color/black"
         android:textSize="40sp"
         android:visibility="invisible"/>
+
+
 
 </RelativeLayout>
