@@ -36,19 +36,19 @@ public class UpdateCardActivity extends AppCompatActivity {
             public void onClick(View v) {
 
                 String question = ((EditText) findViewById(R.id.new_question)).getText().toString();
-                String correct_answer = ((EditText) findViewById(R.id.new_correct_answer)).getText().toString();
+                String answer = ((EditText) findViewById(R.id.new_correct_answer)).getText().toString();
 
-                if (question.length() <= 0 && correct_answer.length() <= 0) {
+                if (question.length() <= 0 && answer.length() <= 0) {
                     displayToast("Must Enter Both Question and Correct Answer to Create Card");
                 } else if (question.length() <= 0) {
                     displayToast("Must Enter Question to Create Card");
-                } else if (correct_answer.length() <= 0) {
+                } else if (answer.length() <= 0) {
                     displayToast("Must Enter Correct Answer to Create Card");
                 } else {
                     Intent data = new Intent();
 
                     data.putExtra("question", question);
-                    data.putExtra("correct_answer", correct_answer);
+                    data.putExtra("correct_answer", answer);
                     data.putExtra("wrong_answer1", ((EditText) findViewById(R.id.new_wrong_answer1)).getText().toString());
                     data.putExtra("wrong_answer2", ((EditText) findViewById(R.id.new_wrong_answer2)).getText().toString());
 

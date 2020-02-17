@@ -14,9 +14,8 @@ import java.util.Random;
 
 public class MainActivity extends AppCompatActivity {
 
-    ImageView flash_card_image_view;
-    boolean is_showing_choices = false;
-    boolean is_showing_question = true;
+    boolean isShowingChoices = false;
+    boolean isShowingQuestion = true;
     int currentCardDisplayedIndex = 0;
 
     FlashcardDatabase flashcardDatabase;
@@ -34,24 +33,23 @@ public class MainActivity extends AppCompatActivity {
 
         flashcardDatabase = new FlashcardDatabase(getApplicationContext());
         allFlashcards = flashcardDatabase.getAllCards();
-
-
-        // Display saved flashcard in the database
-        if (allFlashcards != null && allFlashcards.size() > 0) {
-            displayCard(allFlashcards.get(currentCardDisplayedIndex));
-        }
+        displayCard();
 
 
         // Move to the next card in the database
         findViewById(R.id.next_card).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                int newNum = getRandomNumber(allFlashcards.size());
-                while (newNum == currentCardDisplayedIndex)
-                    newNum = getRandomNumber(allFlashcards.size());
+                if (allFlashcards != null && allFlashcards.size() > 0) {
+                    int newNum = getRandomNumber(allFlashcards.size());
 
-                currentCardDisplayedIndex = newNum;
-                displayCard(allFlashcards.get(currentCardDisplayedIndex));
+                    while (newNum == currentCardDisplayedIndex && allFlashcards.size() > 1) {
+                        newNum = getRandomNumber(allFlashcards.size());
+                    }
+
+                    currentCardDisplayedIndex = newNum;
+                }
+                displayCard();
             }
         });
 
@@ -62,11 +60,8 @@ public class MainActivity extends AppCompatActivity {
                 flashcardDatabase.deleteCard(((TextView) findViewById(R.id.flashcard_question)).getText().toString());
                 allFlashcards = flashcardDatabase.getAllCards();
 
-                if (allFlashcards != null && allFlashcards.size() > 0) {
-                    currentCardDisplayedIndex = allFlashcards.size() - 1;
-                    displayCard(allFlashcards.get(currentCardDisplayedIndex));
-                }
-
+                currentCardDisplayedIndex = allFlashcards.size() >= 0 ? allFlashcards.size() - 1 : 0;
+                displayCard();
             }
         });
 
@@ -76,16 +71,20 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 TextView flash_card_view = findViewById(R.id.flashcard_question);
-                if (is_showing_question) {
-                    flash_card_view.setText(allFlashcards.get(currentCardDisplayedIndex).getAnswer());
-                    flash_card_view.setBackgroundColor(Color.WHITE);
-                    flash_card_view.setTextColor(getResources().getColor(R.color.colorPrimaryDark));
-                    is_showing_question = false;
+                if (allFlashcards != null && allFlashcards.size() > 0) {
+                    if (isShowingQuestion) {
+                        flash_card_view.setText(allFlashcards.get(currentCardDisplayedIndex).getAnswer());
+                        flash_card_view.setBackgroundColor(Color.WHITE);
+                        flash_card_view.setTextColor(getResources().getColor(R.color.colorPrimaryDark));
+                        isShowingQuestion = false;
+                    } else {
+                        flash_card_view.setText(allFlashcards.get(currentCardDisplayedIndex).getQuestion());
+                        flash_card_view.setTextColor(Color.WHITE);
+                        flash_card_view.setBackground(getResources().getDrawable(R.drawable.card_background));
+                        isShowingQuestion = true;
+                    }
                 } else {
-                    flash_card_view.setText(allFlashcards.get(currentCardDisplayedIndex).getQuestion());
-                    flash_card_view.setTextColor(Color.WHITE);
-                    flash_card_view.setBackground(getResources().getDrawable(R.drawable.card_background));
-                    is_showing_question = true;
+                    displayEmptyState();
                 }
             }
         });
@@ -133,22 +132,21 @@ public class MainActivity extends AppCompatActivity {
         findViewById(R.id.toogle_choices_visibility).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                flash_card_image_view = findViewById(R.id.toogle_choices_visibility);
 
-                if (is_showing_choices) { // Show multiple choices
-                    flash_card_image_view.setImageResource(R.drawable.show_icon);
-                    ((TextView) findViewById(R.id.flashcard_question)).setText(allFlashcards.get(currentCardDisplayedIndex).getQuestion());
-                    findViewById(R.id.correct_answer).setVisibility(View.INVISIBLE);
-                    findViewById(R.id.wrong_answer1).setVisibility(View.INVISIBLE);
-                    findViewById(R.id.wrong_answer2).setVisibility(View.INVISIBLE);
-                    is_showing_choices = false;
+                if (allFlashcards != null && allFlashcards.size() > 0) {
+                    if (isShowingChoices) { // Hide multiple choices
+                        hideChoices();
+                        ((TextView) findViewById(R.id.flashcard_question)).setText(allFlashcards.get(currentCardDisplayedIndex).getQuestion());
 
-                } else { // Hide multiple choices
-                    flash_card_image_view.setImageResource(R.drawable.hide_icon);
-                    findViewById(R.id.correct_answer).setVisibility(View.VISIBLE);
-                    findViewById(R.id.wrong_answer1).setVisibility(View.VISIBLE);
-                    findViewById(R.id.wrong_answer2).setVisibility(View.VISIBLE);
-                    is_showing_choices = true;
+                    } else { // Show multiple choices
+                        ((ImageView) findViewById(R.id.toogle_choices_visibility)).setImageResource(R.drawable.hide_icon);
+                        findViewById(R.id.correct_answer).setVisibility(View.VISIBLE);
+                        findViewById(R.id.wrong_answer1).setVisibility(View.VISIBLE);
+                        findViewById(R.id.wrong_answer2).setVisibility(View.VISIBLE);
+                        isShowingChoices = true;
+                    }
+                } else {
+                    displayEmptyState();
                 }
 
             }
@@ -211,7 +209,7 @@ public class MainActivity extends AppCompatActivity {
             }
 
             allFlashcards = flashcardDatabase.getAllCards();
-            displayCard(allFlashcards.get(currentCardDisplayedIndex));
+            displayCardInfo(allFlashcards.get(currentCardDisplayedIndex));
             Snackbar.make(findViewById(R.id.flashcard_question),
                     "Card successfully saved",
                     Snackbar.LENGTH_SHORT)
@@ -221,15 +219,48 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    protected void displayCard(Flashcard flashcard) {
+    protected void displayCardInfo(Flashcard flashcard) {
         ((TextView) findViewById(R.id.flashcard_question)).setText(flashcard.getQuestion());
         ((TextView) findViewById(R.id.correct_answer)).setText(flashcard.getAnswer());
         ((TextView) findViewById(R.id.wrong_answer1)).setText(flashcard.getWrongAnswer1());
         ((TextView) findViewById(R.id.wrong_answer2)).setText(flashcard.getWrongAnswer2());
+
+        resetChoiceColor();
+        findViewById(R.id.edit_card).setVisibility(View.VISIBLE);
+    }
+
+    protected void displayEmptyState() {
+        ((TextView) findViewById(R.id.flashcard_question)).setText("Hello There");
+        hideChoices();
+        findViewById(R.id.edit_card).setVisibility(View.INVISIBLE);
+    }
+
+    protected void displayCard() {
+        if (allFlashcards != null && allFlashcards.size() > 0) {
+            displayCardInfo(allFlashcards.get(currentCardDisplayedIndex));
+        } else {
+            displayEmptyState();
+        }
     }
 
     protected int getRandomNumber(int maxNumber) {
         return rand.nextInt(maxNumber);
+    }
+
+    protected void hideChoices() {
+        ((ImageView) findViewById(R.id.toogle_choices_visibility)).setImageResource(R.drawable.show_icon);
+        findViewById(R.id.correct_answer).setVisibility(View.INVISIBLE);
+        findViewById(R.id.wrong_answer1).setVisibility(View.INVISIBLE);
+        findViewById(R.id.wrong_answer2).setVisibility(View.INVISIBLE);
+        isShowingChoices = false;
+        resetChoiceColor();
+    }
+
+    protected void resetChoiceColor() {
+        findViewById(R.id.correct_answer).setBackgroundColor(getResources().getColor(R.color.orange));
+        findViewById(R.id.wrong_answer1).setBackgroundColor(getResources().getColor(R.color.orange));
+        findViewById(R.id.wrong_answer2).setBackgroundColor(getResources().getColor(R.color.orange));
+
     }
 
 }
