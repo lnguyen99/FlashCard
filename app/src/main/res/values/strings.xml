@@ -1,9 +1,5 @@
 <resources>
     <string name="app_name">Flash Card</string>
-    <string name="question">Who is the 44th President of the United States?</string>
-    <string name="correct_answer">Barack Obama</string>
-    <string name="wrong_answer1">Bill Clinton</string>
-    <string name="wrong_answer2">Donald Trump</string>
     <string name="hint_new_question">Enter The Question Here</string>
     <string name="hint_correct_answer">Enter The Correct Answer Here</string>
     <string name="hint_wrong_answer1">Enter A Wrong Answer Here</string>

@@ -8,19 +8,20 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
-public class EditCardActivity extends AppCompatActivity {
+public class UpdateCardActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_edit_card);
+        setContentView(R.layout.activity_add_card);
 
         ((EditText) findViewById(R.id.new_question)).setText(getIntent().getStringExtra("question"));
         ((EditText) findViewById(R.id.new_correct_answer)).setText(getIntent().getStringExtra("correct_answer"));
         ((EditText) findViewById(R.id.new_wrong_answer1)).setText(getIntent().getStringExtra("wrong_answer1"));
         ((EditText) findViewById(R.id.new_wrong_answer2)).setText(getIntent().getStringExtra("wrong_answer2"));
 
-        //Dismiss the EditCardActivity
+
+        //Dismiss the UpdateCardActivity
         //Go back to the MainActivity (Homepage)
         findViewById(R.id.cancel_activity).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -33,15 +34,16 @@ public class EditCardActivity extends AppCompatActivity {
         findViewById(R.id.save_card).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 String question = ((EditText) findViewById(R.id.new_question)).getText().toString();
                 String correct_answer = ((EditText) findViewById(R.id.new_correct_answer)).getText().toString();
 
                 if (question.length() <= 0 && correct_answer.length() <= 0) {
-                    displayToast("Question and Correct Answer Cannot Be Blank");
+                    displayToast("Must Enter Both Question and Correct Answer to Create Card");
                 } else if (question.length() <= 0) {
-                    displayToast("Question Cannot Be Blank");
+                    displayToast("Must Enter Question to Create Card");
                 } else if (correct_answer.length() <= 0) {
-                    displayToast("Correct Answer Cannot Be Blank");
+                    displayToast("Must Enter Correct Answer to Create Card");
                 } else {
                     Intent data = new Intent();
 
@@ -53,6 +55,7 @@ public class EditCardActivity extends AppCompatActivity {
                     setResult(RESULT_OK, data);
                     finish();
                 }
+
             }
         });
 

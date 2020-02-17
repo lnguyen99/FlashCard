@@ -1,4 +1,4 @@
-## Lab 1
+## Lab 1 - Creating our Flashcard App
 
 ### App Description
 This week we will start building our Flashcard app and focus on how to add and customize views to be displayed on the screen. By the end of this lab you should have a basic Flashcard app that can display a question, and on tap display the answer to the question. We will also practice pushing code to Github in order to better manage the project.

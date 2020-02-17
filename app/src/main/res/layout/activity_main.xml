@@ -14,27 +14,11 @@
         android:layout_height="200dp"
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
-        android:layout_marginTop="33dp"
         android:background="@drawable/card_background"
         android:elevation="10dp"
         android:gravity="center"
-        android:text="@string/question"
         android:textColor="@android:color/white"
         android:textSize="40sp" />
-
-    <TextView
-        android:id="@+id/flashcard_answer"
-        android:layout_width="match_parent"
-        android:layout_height="200dp"
-        android:layout_alignParentStart="true"
-        android:layout_alignTop="@+id/flashcard_question"
-        android:background="@drawable/card_background"
-        android:elevation="10dp"
-        android:gravity="center"
-        android:text="@string/correct_answer"
-        android:textColor="@android:color/white"
-        android:textSize="40sp"
-        android:visibility="invisible" />
 
     <TextView
         android:id="@+id/correct_answer"
@@ -42,10 +26,9 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_alignParentStart="true"
-        android:layout_marginBottom="67dp"
+        android:layout_marginBottom="87dp"
         android:background="@color/orange"
         android:gravity="center"
-        android:text="@string/correct_answer"
         android:textColor="@android:color/black"
         android:textSize="30sp"
         android:visibility="invisible" />
@@ -54,12 +37,10 @@
         android:id="@+id/wrong_answer1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
         android:layout_alignParentStart="true"
-        android:layout_marginBottom="201dp"
+        android:layout_below="@+id/next_card"
         android:background="@color/orange"
         android:gravity="center"
-        android:text="@string/wrong_answer1"
         android:textColor="@android:color/black"
         android:textSize="30sp"
         android:visibility="invisible" />
@@ -70,10 +51,9 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_alignParentStart="true"
-        android:layout_marginBottom="133dp"
+        android:layout_marginBottom="149dp"
         android:background="@color/orange"
         android:gravity="center"
-        android:text="@string/wrong_answer2"
         android:textColor="@android:color/black"
         android:textSize="30sp"
         android:visibility="invisible" />
@@ -87,12 +67,28 @@
         android:src="@drawable/edit_icon_foreground" />
 
     <ImageView
+        android:id="@+id/delete_card"
+        android:layout_width="wrap_content"
+        android:layout_height="65dp"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/flashcard_question"
+        android:src="@drawable/delete_icon_foreground" />
+
+    <ImageView
+        android:id="@+id/next_card"
+        android:layout_width="wrap_content"
+        android:layout_height="65dp"
+        android:layout_alignParentEnd="true"
+        android:layout_below="@+id/flashcard_question"
+        android:src="@drawable/next_icon_foreground" />
+
+    <ImageView
         android:id="@+id/toogle_choices_visibility"
         android:layout_width="wrap_content"
         android:layout_height="65dp"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:src="@drawable/hide_icon" />
+        android:src="@drawable/show_icon" />
 
     <ImageView
         android:id="@+id/add_card"

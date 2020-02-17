@@ -1,4 +1,4 @@
-## Lab 2
+## Lab 2 - Creating Cards
 
 ### App Description
 In this lab we'll continue improving our Flashcards app by adding new features on top of everything you built in the previous lab. We'll create a new screen where users can create new flashcards right from the app. Whenever you want to study something new you can just create a new flashcard!

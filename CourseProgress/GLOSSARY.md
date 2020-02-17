@@ -62,6 +62,19 @@
   
 ## LAB 3
 
+- **Gradle** : dependency management system for Android
 
+- [**Persistence in Android**](https://guides.codepath.org/android/Persisting-Data-to-the-Device) : app's ability to save data, which means that the app will have the same information stored in it even if the user restarts the app, or restarts their phone. This can be done through a couple different ways: SharedPreferences, Text Files, and Databases.
+    - **Empty States** : app doesn't have any data to display yet (ie : first launch or clear all information on app)
+    - [**Room persistence library**](https://guides.codepath.org/android/Room-Guide) : Writing SQL queries for databases can be hard and complicated. So to make development easier, Google introduced a persistence library called Room. Room makes SQL queries easier to implement and use.
+                                     
+- **SQL** (Structured Query Language) : add, update, delete and retrieve information from databases
 
 ## LAB 4
+
+- [**AnimationListener**](https://guides.codepath.org/android/animations#1-using-xml) : gives us callbacks for knowing when an animation starts / ends, so we can hide and show the appropriate views when necessary
+    - For example, if we wanted to animate a view disappearing, after the animation finishes we would need to set the visibility of the view to `INVISIBLE`, and this can be more easily done with an `AnimationListener`
+
+- **View Properties / Property Animators**
+
+- **Activity Transitions** : 
