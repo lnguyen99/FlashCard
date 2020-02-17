@@ -1,7 +1,7 @@
 ## FLASH CARD APP
 
 Course work for CodePath, Mobie App Design, Android track
-Learning and Lab Progress are documented in @CourseProgress directory, with app walk-through and feature checklist for specific lab
+Learning and Lab Progress are documented in [a dedicated directory](CourseProgress) directory, with app walk-through and feature checklist for specific lab
 
 ### App Description 
 Lightweight, simple app to study using the flashcards method. 
