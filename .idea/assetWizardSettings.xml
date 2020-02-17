@@ -45,9 +45,7 @@
                                   </option>
                                   <option name="values">
                                     <map>
-                                      <entry key="backgroundLayerName" value="ic_launcher_background" />
-                                      <entry key="foregroundImage" value="$USER_HOME$/Downloads/iconmonstr-trash-can-2.svg" />
-                                      <entry key="outputName" value="delete_icon" />
+                                      <entry key="foregroundImage" value="$USER_HOME$/Downloads/iconmonstr-cat-8.svg" />
                                     </map>
                                   </option>
                                 </PersistentState>

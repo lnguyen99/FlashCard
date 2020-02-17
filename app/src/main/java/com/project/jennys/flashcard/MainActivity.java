@@ -1,29 +1,36 @@
 package com.project.jennys.flashcard;
 
+import android.animation.Animator;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.view.ViewAnimationUtils;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.plattysoft.leonids.ParticleSystem;
 
 import java.util.List;
 import java.util.Random;
 
 public class MainActivity extends AppCompatActivity {
 
-    boolean isShowingChoices = false;
-    boolean isShowingQuestion = true;
-    int currentCardDisplayedIndex = 0;
-
-    FlashcardDatabase flashcardDatabase;
-    List<Flashcard> allFlashcards;
-
     final static int ADD_CARD_REQUEST_CODE = 100;
     final static int EDIT_CARD_REQUEST_CODE = 150;
     final Random rand = new Random();
+
+    boolean isShowingChoices = false;
+    CountDownTimer countDownTimer;
+
+    int currentCardDisplayedIndex = 0;
+    FlashcardDatabase flashcardDatabase;
+    List<Flashcard> allFlashcards;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,23 +42,47 @@ public class MainActivity extends AppCompatActivity {
         allFlashcards = flashcardDatabase.getAllCards();
         displayCard();
 
+        countDownTimer = new CountDownTimer(16000, 1000) {
+            public void onTick(long millisUntilFinished) {
+                ((TextView) findViewById(R.id.timer)).setText("" + millisUntilFinished / 1000);
+            }
+
+            public void onFinish() {
+            }
+        };
+
 
         // Move to the next card in the database
         findViewById(R.id.next_card).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (allFlashcards != null && allFlashcards.size() > 0) {
-                    int newNum = getRandomNumber(allFlashcards.size());
+                final Animation leftOutAnim = AnimationUtils.loadAnimation(v.getContext(), R.anim.left_out);
+                final Animation rightInAnim = AnimationUtils.loadAnimation(v.getContext(), R.anim.right_in);
 
-                    while (newNum == currentCardDisplayedIndex && allFlashcards.size() > 1) {
-                        newNum = getRandomNumber(allFlashcards.size());
-                    }
+                if (allFlashcards != null && allFlashcards.size() > 1) {
+                    getRandomCardIndex();
 
-                    currentCardDisplayedIndex = newNum;
+                    leftOutAnim.setAnimationListener(new Animation.AnimationListener() {
+                        @Override
+                        public void onAnimationStart(Animation animation) {}
+
+                        @Override
+                        public void onAnimationEnd(Animation animation) {
+                            findViewById(R.id.flashcard_question).startAnimation(rightInAnim);
+                        }
+
+                        @Override
+                        public void onAnimationRepeat(Animation animation) {}
+                    });
+
+                    findViewById(R.id.flashcard_question).startAnimation(leftOutAnim);
+                    if (isShowingChoices) startTimer();
                 }
+
                 displayCard();
             }
         });
+
 
         // Delete the current card from the Database
         findViewById(R.id.delete_card).setOnClickListener(new View.OnClickListener() {
@@ -59,7 +90,6 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 flashcardDatabase.deleteCard(((TextView) findViewById(R.id.flashcard_question)).getText().toString());
                 allFlashcards = flashcardDatabase.getAllCards();
-
                 currentCardDisplayedIndex = allFlashcards.size() >= 0 ? allFlashcards.size() - 1 : 0;
                 displayCard();
             }
@@ -70,22 +100,15 @@ public class MainActivity extends AppCompatActivity {
         findViewById(R.id.flashcard_question).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                TextView flash_card_view = findViewById(R.id.flashcard_question);
                 if (allFlashcards != null && allFlashcards.size() > 0) {
-                    if (isShowingQuestion) {
-                        flash_card_view.setText(allFlashcards.get(currentCardDisplayedIndex).getAnswer());
-                        flash_card_view.setBackgroundColor(Color.WHITE);
-                        flash_card_view.setTextColor(getResources().getColor(R.color.colorPrimaryDark));
-                        isShowingQuestion = false;
-                    } else {
-                        flash_card_view.setText(allFlashcards.get(currentCardDisplayedIndex).getQuestion());
-                        flash_card_view.setTextColor(Color.WHITE);
-                        flash_card_view.setBackground(getResources().getDrawable(R.drawable.card_background));
-                        isShowingQuestion = true;
-                    }
-                } else {
-                    displayEmptyState();
+                    showAnswer();
                 }
+            }
+        });
+        findViewById(R.id.flashcard_answer).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showQuestion();
             }
         });
 
@@ -97,6 +120,10 @@ public class MainActivity extends AppCompatActivity {
                 findViewById(R.id.correct_answer).setBackgroundColor(
                         getResources().getColor(R.color.green)
                 );
+                new ParticleSystem(MainActivity.this, 100, R.drawable.confetti, 3000)
+                        .setSpeedRange(0.2f, 0.5f)
+                        .oneShot(findViewById(R.id.correct_answer), 100);
+                countDownTimer.cancel();
             }
         });
 
@@ -108,9 +135,6 @@ public class MainActivity extends AppCompatActivity {
                 findViewById(R.id.wrong_answer1).setBackgroundColor(
                         getResources().getColor(R.color.red)
                 );
-                findViewById(R.id.correct_answer).setBackgroundColor(
-                        getResources().getColor(R.color.green)
-                );
             }
         });
 
@@ -119,10 +143,6 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 findViewById(R.id.wrong_answer2).setBackgroundColor(
                         getResources().getColor(R.color.red)
-                );
-
-                findViewById(R.id.correct_answer).setBackgroundColor(
-                        getResources().getColor(R.color.green)
                 );
             }
         });
@@ -134,17 +154,15 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
 
                 if (allFlashcards != null && allFlashcards.size() > 0) {
+
                     if (isShowingChoices) { // Hide multiple choices
                         hideChoices();
                         ((TextView) findViewById(R.id.flashcard_question)).setText(allFlashcards.get(currentCardDisplayedIndex).getQuestion());
 
                     } else { // Show multiple choices
-                        ((ImageView) findViewById(R.id.toogle_choices_visibility)).setImageResource(R.drawable.hide_icon);
-                        findViewById(R.id.correct_answer).setVisibility(View.VISIBLE);
-                        findViewById(R.id.wrong_answer1).setVisibility(View.VISIBLE);
-                        findViewById(R.id.wrong_answer2).setVisibility(View.VISIBLE);
-                        isShowingChoices = true;
+                        showChoices();
                     }
+
                 } else {
                     displayEmptyState();
                 }
@@ -159,8 +177,10 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Intent intent = new Intent(MainActivity.this, UpdateCardActivity.class);
                 MainActivity.this.startActivityForResult(intent, ADD_CARD_REQUEST_CODE);
+                overridePendingTransition(R.anim.right_in, R.anim.left_out);
             }
         });
+
 
         //Update Current Card
         findViewById(R.id.edit_card).setOnClickListener(new View.OnClickListener() {
@@ -175,6 +195,7 @@ public class MainActivity extends AppCompatActivity {
                 intent.putExtra("wrong_answer2", currentCard.getWrongAnswer2());
 
                 MainActivity.this.startActivityForResult(intent, EDIT_CARD_REQUEST_CODE);
+                overridePendingTransition(R.anim.right_in, R.anim.left_out);
             }
         });
 
@@ -186,8 +207,8 @@ public class MainActivity extends AppCompatActivity {
         String question, correct_answer, wrong_answer1, wrong_answer2, text = "";
 
         if (((requestCode == EDIT_CARD_REQUEST_CODE) || (requestCode == ADD_CARD_REQUEST_CODE))
-                && resultCode == RESULT_OK)
-        {
+                && resultCode == RESULT_OK) {
+
             question = data.getExtras().getString("question");
             correct_answer = data.getExtras().getString("correct_answer");
             wrong_answer1 = data.getExtras().getString("wrong_answer1");
@@ -196,7 +217,6 @@ public class MainActivity extends AppCompatActivity {
             if (requestCode == ADD_CARD_REQUEST_CODE) {
                 flashcardDatabase.insertCard(new Flashcard(question, correct_answer, wrong_answer1, wrong_answer2));
                 currentCardDisplayedIndex = allFlashcards.size();
-
             } else {
                 Flashcard cardToEdit = allFlashcards.get(currentCardDisplayedIndex);
 
@@ -209,33 +229,18 @@ public class MainActivity extends AppCompatActivity {
             }
 
             allFlashcards = flashcardDatabase.getAllCards();
-            displayCardInfo(allFlashcards.get(currentCardDisplayedIndex));
+            displayCard();
             Snackbar.make(findViewById(R.id.flashcard_question),
                     "Card successfully saved",
                     Snackbar.LENGTH_SHORT)
                     .show();
 
+            startTimer();
         }
 
     }
 
-    protected void displayCardInfo(Flashcard flashcard) {
-        ((TextView) findViewById(R.id.flashcard_question)).setText(flashcard.getQuestion());
-        ((TextView) findViewById(R.id.correct_answer)).setText(flashcard.getAnswer());
-        ((TextView) findViewById(R.id.wrong_answer1)).setText(flashcard.getWrongAnswer1());
-        ((TextView) findViewById(R.id.wrong_answer2)).setText(flashcard.getWrongAnswer2());
-
-        resetChoiceColor();
-        findViewById(R.id.edit_card).setVisibility(View.VISIBLE);
-    }
-
-    protected void displayEmptyState() {
-        ((TextView) findViewById(R.id.flashcard_question)).setText("Hello There");
-        hideChoices();
-        findViewById(R.id.edit_card).setVisibility(View.INVISIBLE);
-    }
-
-    protected void displayCard() {
+    public void displayCard() {
         if (allFlashcards != null && allFlashcards.size() > 0) {
             displayCardInfo(allFlashcards.get(currentCardDisplayedIndex));
         } else {
@@ -243,8 +248,51 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    protected int getRandomNumber(int maxNumber) {
-        return rand.nextInt(maxNumber);
+    protected void displayCardInfo(Flashcard flashcard) {
+        ((TextView) findViewById(R.id.flashcard_question)).setText(flashcard.getQuestion());
+        ((TextView) findViewById(R.id.flashcard_answer)).setText(flashcard.getAnswer());
+        ((TextView) findViewById(R.id.correct_answer)).setText(flashcard.getAnswer());
+        ((TextView) findViewById(R.id.wrong_answer1)).setText(flashcard.getWrongAnswer1());
+        ((TextView) findViewById(R.id.wrong_answer2)).setText(flashcard.getWrongAnswer2());
+
+        showQuestion();
+        resetChoiceColor();
+        findViewById(R.id.edit_card).setVisibility(View.VISIBLE);
+    }
+
+    protected void displayEmptyState() {
+        ((TextView) findViewById(R.id.flashcard_question)).setText("Hello There");
+        showQuestion();
+        hideChoices();
+        findViewById(R.id.edit_card).setVisibility(View.INVISIBLE);
+    }
+
+    protected void showQuestion() {
+        findViewById(R.id.flashcard_question).setVisibility(View.VISIBLE);
+        ((TextView) findViewById(R.id.flashcard_question)).setTextColor(Color.WHITE);
+        findViewById(R.id.flashcard_answer).setVisibility(View.INVISIBLE);
+    }
+
+    protected void showAnswer() {
+        TextView answerSideView = findViewById(R.id.flashcard_answer);
+
+        // get the center for the clipping circle
+        int cx = answerSideView.getWidth() / 2;
+        int cy = answerSideView.getHeight() / 2;
+
+        // get the final radius for the clipping circle
+        float finalRadius = (float) Math.hypot(cx, cy);
+
+        // create the animator for this view (the start radius is zero)
+        Animator anim = ViewAnimationUtils.createCircularReveal(answerSideView, cx, cy, 0f, finalRadius);
+
+        // hide the question and show the answer to prepare for playing the animation!
+        findViewById(R.id.flashcard_question).setVisibility(View.INVISIBLE);
+        answerSideView.setVisibility(View.VISIBLE);
+        answerSideView.setTextColor(getResources().getColor(R.color.colorPrimary));
+
+        anim.setDuration(450);
+        anim.start();
     }
 
     protected void hideChoices() {
@@ -252,15 +300,37 @@ public class MainActivity extends AppCompatActivity {
         findViewById(R.id.correct_answer).setVisibility(View.INVISIBLE);
         findViewById(R.id.wrong_answer1).setVisibility(View.INVISIBLE);
         findViewById(R.id.wrong_answer2).setVisibility(View.INVISIBLE);
+        findViewById(R.id.timer).setVisibility(View.INVISIBLE);
         isShowingChoices = false;
         resetChoiceColor();
+    }
+
+    protected void showChoices() {
+        ((ImageView) findViewById(R.id.toogle_choices_visibility)).setImageResource(R.drawable.hide_icon);
+        findViewById(R.id.correct_answer).setVisibility(View.VISIBLE);
+        findViewById(R.id.wrong_answer1).setVisibility(View.VISIBLE);
+        findViewById(R.id.wrong_answer2).setVisibility(View.VISIBLE);
+        findViewById(R.id.timer).setVisibility(View.VISIBLE);
+        isShowingChoices = true;
+        startTimer();
     }
 
     protected void resetChoiceColor() {
         findViewById(R.id.correct_answer).setBackgroundColor(getResources().getColor(R.color.orange));
         findViewById(R.id.wrong_answer1).setBackgroundColor(getResources().getColor(R.color.orange));
         findViewById(R.id.wrong_answer2).setBackgroundColor(getResources().getColor(R.color.orange));
+    }
 
+    protected void getRandomCardIndex() {
+        int rando = currentCardDisplayedIndex;
+        while (rando == currentCardDisplayedIndex)
+            rando = rand.nextInt(allFlashcards.size());
+        currentCardDisplayedIndex = rando;
+    }
+
+    private void startTimer() {
+        countDownTimer.cancel();
+        countDownTimer.start();
     }
 
 }

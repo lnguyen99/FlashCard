@@ -5,15 +5,16 @@ Learning and Lab Progress are documented in @CourseProgress directory, with app 
 
 ### App Description 
 Lightweight, simple app to study using the flashcards method. 
-Study on your phone wherever, whenever you want while being sustainable (no paper waste to the environment!!) 
+Study on your phone wherever, whenever you want while being sustainable (no paper waste to the environment!!)
+ 
 ##### Feature List:
 - [x] Learn by flipping through flashcard pairs  
-- [x] Test yourself through multiple choice quizzes
+- [x] Test yourself through multiple choice quizzes (timed!!)
 - [x] Add whatever learning materials you need, as long as it can be represented in pair
 - [x] Update your current cards to whatever contents you want
 
 ### Complete App Walk-though
-<img src="https://imgur.com/xRwQRQQ.gif" width=200><br>
+<img src="https://i.imgur.com/LVdxYsX.gif" width=200><br>
 
 
 
