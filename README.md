@@ -16,5 +16,5 @@ Study on your phone wherever, whenever you want while being sustainable (no pape
 ### Complete App Walk-though
 <img src="https://i.imgur.com/LVdxYsX.gif" width=200><br>
 
-
+APK Build updated!
 
